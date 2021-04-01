@@ -94,6 +94,8 @@ circos.par("track.height" = 0.075, canvas.xlim = c(-1, 1), canvas.ylim = c(-1.3,
 circos.initialize(pub_dat$state_abbreviation, xlim = c(-100, 100))
 ```
 
+![1](Figures/1.png)
+
 **But there is nothing there!** That is because we have not specified what information we want. To do this, we have to specify one track at a time. Each time we call a track, it will be plotted on consecutive inner rings.
 
 Next, we will add information onto the track. Here, we specify that we want the circular graph to be divided (or sliced) by the state. That will be our sector indicator. For this first track, we want to look at population in 2017. The code `circos.text` and `circos.axis` allow for modifying the text surrounding the first track, as well as the track axis positioning and features.
@@ -124,6 +126,8 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$population2017, bg.border =
                            major.tick = F)
              })
 ```
+![2](Figures/2.png)
+
 We now see that we have a circular graph with state labels, but it does not have any information about the population. If you look at the `circlize` manual, you'll see there are many options for treating each cell as its own plot. That is, you can plot histograms, line graphs, box plots, etc... in each cell. But when dealing with so many units, such as 50 states, we may want to display information in a simpler way.
 
 In this case, we can specify the background color of each cell. The color can correspond to the intensity of the information we are interested in plotting. To do this, we use the `color_fun` we loaded during the setup in the argument `bg.col` (i.e. background color). 
@@ -164,6 +168,7 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$population2017, bg.border =
                            major.tick = F)
              })
 ```
+![3](Figures/3.png)
 
 As we can see, California is the darkest color, which makes sense.
 
@@ -180,7 +185,6 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$poverty2017, bg.col = color
 
 circos.track(pub_dat$state_abbreviation, y = pub_dat$uninsured, bg.col = color_fun(pub_dat, uninsured, "darkgoldenrod1", "darkgoldenrod3", "darkgoldenrod4"), bg.border = "grey50")
 ```
-
 
 ```{r fig.height = 20, fig.width = 20, echo = F}
 # determines how 'tall' the tracks should be
@@ -209,6 +213,7 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$poverty2017, bg.col = color
 
 circos.track(pub_dat$state_abbreviation, y = pub_dat$uninsured, bg.col = color_fun(pub_dat, uninsured, "darkgoldenrod1", "darkgoldenrod3", "darkgoldenrod4"), bg.border = "grey50")
 ```
+![4](Figures/4.png)
 
 Although this contains all of the information we may be interested in, it can be a little overwhelming to interpret. Adding in regional groupings can help orient readers. 
 
@@ -247,6 +252,7 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$uninsured, bg.col = color_f
 
 highlight.sector(col = NULL, sector.index = en_central, border = "black", lwd = 3.5, text = "East North Central", niceFacing = T, facing = "bending.inside", text.vjust = "2.5inches", cex = 2)
 ```
+![5](Figures/5.png)
 
 Within `highlight.sector` there are a few useful arguments. `border` specifies the border color. `lwd` specifies the thickness of the border, `text` is the label name for the section. `niceFacing` rotates the bottom text to face outward, making it easier to read. `text.vjust` allows you to change the vertical justification of the text. And `cex` is the text size. 
 
@@ -316,6 +322,7 @@ highlight.sector(col = NULL, sector.index = wn_central, border = "black", lwd = 
 
 highlight.sector(col = NULL, sector.index = ws_central, border = "black", lwd = 3.5, niceFacing = T, facing = "bending.inside", text = "West South Central", text.vjust = "2.5inches", cex = 2)
 ```
+![6](Figures/6.png)
 
 While it may look like the graph is complete, we must add a legend! 
 
@@ -395,6 +402,7 @@ labels <- matrix(c("Outter Ring:", "Min Population", "Median Population", "Max P
 
 legend("bottom", legend = labels, fill = colors, border = borders, cex = 1.4, ncol = 4)
 ```
+![7](Figures/7.png)
 
 ## Dealing with NA's
 
@@ -421,6 +429,7 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$op_prescription100person_20
 
 circos.track(pub_dat$state_abbreviation, y = pub_dat$opioid_admissions, bg.col = color_fun(pub_dat, opioid_admissions, "mediumpurple1", "mediumpurple3", "mediumpurple4"), bg.border = "grey50")
 ```
+![8](Figures/8.png)
 
 Here, we see that our second track did not plot Upon looking at the data, we see we have missing values. 
 
@@ -471,6 +480,7 @@ admission <- replace_na(pub_dat$opioid_admissions, 0)
 circos.track(pub_dat$state_abbreviation, y = admission, bg.col = admission_colors, bg.border = "grey50")
 
 ```
+![9](Figures/9.png)
 
 However, we may want to give our viewers an understanding of what the white cells mean. In this case, we can write 'NA' for our missing values. In this example we are missing data for Maryland, Georgia, and Oregon. In `circos.text`, the first two arguments are the x and y locations of the plot. `adj` is the radial adjustment of the text. In this case, I wanted the text to be centered in the middle of the cell. I want the text to say 'NA', and the color to be `red4`. `track.index` specifies which track we want to add the text in. Since this is the second ring, we specify `track.index = 2`. `sector.index` is the slice we want. In this case, it is the state abbreviation: MD, GA, and OR.
 
@@ -516,6 +526,7 @@ circos.text(0, 0, adj = c(0.5, 0), "NA", col = "red4", sector.index = "GA", trac
 
 circos.text(0,0, adj = c(0.5, 0), "NA", col = "red4", sector.index = "OR", track.index = 2, cex = 1.8, niceFacing = T)
 ```
+![10](Figures/10.png)
 
 From there, we can continue adding our tracks, regional groupings, and legends as we did above. 
 
@@ -587,3 +598,4 @@ labels <- matrix(c("Outter Ring: Opioid Rx (100 People)", "Min ", "Median", "Max
 legend("bottom", legend = labels, fill = colors, border = borders, cex = 1.4, ncol = 4)
 
 ```
+![11](Figures/11.png)
