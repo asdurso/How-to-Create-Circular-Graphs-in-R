@@ -1,5 +1,6 @@
 # How-to-Create-Circular-Graphs-in-R
-This tutorial condenses the `circlize` manual for creating circular graphs in R, It provides an easy how-to guide for showing how to display data in a circular format using `circlize`.The data used are publicly available data on health markers from []. This tutorial supplements ["Circular Visualization in R" by Zuguang Gu](https://jokergoo.github.io/circlize_book/book/index.html). 
+
+This tutorial condenses the `circlize` manual for creating circular graphs in R. It provides an easy guide for displaying data in a circular format using `circlize`.The data used are publicly available data on health markers from []. This tutorial supplements ["Circular Visualization in R" by Zuguang Gu](https://jokergoo.github.io/circlize_book/book/index.html). 
 
 # Tutorial 
 
@@ -15,11 +16,11 @@ From the `circlize` manual: *"A circular layout is composed of sectors and track
 
 ## Set up 
 
-First, we will set up our workspace by loaded any packages, data, and functions we will use.
+First, we will set up our workspace by loading any packages, data, and functions we will use.
 
 ### Load packages 
 
-Typically, it is advised to load `tidyverse` last, because I want to use the defaults associated with `tidyverse`. However, in the case that there are  incompatibilities with `circlize`, I suggest loading `circlize` last. 
+Typically, it is advised to load `tidyverse` last, because we usually want to use the defaults associated with `tidyverse`. However, in the case that there are incompatibilities with `circlize`, I suggest loading `circlize` last. 
 
 ```{r}
 library(broom)
@@ -27,7 +28,7 @@ library(tidyverse)
 library(circlize)
 ```
 
-Next, we will load our function. The function `color_fun` helps create a scale of color based on the minimum value, maximum value, and median value of the data column. 
+Next, we will load our function. The function `color_fun` helps create a scales of colors based on the minimum values, maximum values, and median values of the data columns we specify. 
 
 ```{r}
 color_fun <- function(data, variable, color1, color2, color3) {
@@ -39,7 +40,7 @@ color_fun <- function(data, variable, color1, color2, color3) {
 
 ### Data import 
 
-Next, we will import our data. The data are from ___. In this case, I have also appended codes for regions of the United States and the states within those regions. This new variable is called `region`. For simplicity, I have not included the code for `region` in this tutorial. 
+We then import our data. The data are from ___. In this case, I have also appended codes for regions of the United States by states. This new variable is called `region`. For simplicity, I have not included the code for `region` in this tutorial. 
 
 ```{r}
 pub_dat <- read_csv("pub_dat_cleaned.csv")
@@ -56,11 +57,11 @@ pub_dat <- pub_dat %>%
 
 ### Secondary level groupings: Grouping Sectors
 
-We can easily group variables by the smallest unit available in the data and of interest. In this case, we have data at he state level. But we may also wish to group states within regions. That is, we may want to do additional groupings at a larger level than our primary unit. 
+We can easily group variables by the smallest unit available in the data and of interest. In this case, we have data at the state level. But we may also wish to group states within regions. That is, we may want to do additional groupings at a larger level than our primary unit. 
 
 In this case, it is easier to create these secondary groupings before creating our circular graph. This is because the circular graph is created using base R, which layers parts of the graph. It is easier to layer using information we have created beforehand. In this case, it is the regional groupings. To do this, we create subsetted versions of the data by region, as shown below.
 
-Once we make this secondary level grouping, we can use the circlize function `highlight.sector` to outline the secondary-level groupings. , which we will see in the following code chunk. Before we can highlight the sectors we want, we must create a string of characters which include the state names we want to group together.
+Once we make this secondary level grouping, we can use the circlize function `highlight.sector` to outline the secondary-level groupings. Before we can highlight the sectors we want, we must create a string of characters which include the state names we want to group together.
 
 ```{r}
 en_central <- pub_dat$state_abbreviation[pub_dat$region =="E.N. Central"] #groups the states in East North Central
@@ -84,7 +85,7 @@ ws_central <- pub_dat$state_abbreviation[pub_dat$region =="W.S. Central"] #group
 
 ## Initialize circle 
 
-Next, we will initialize our circle plot by specifying how tall our tracks should be and how each section should be divided. In this case, the sectors are divided by each state--our lowest unit of interest in this case.
+Next, we will initialize our circle plot by specifying how tall our tracks should be, and how each section should be divided. In this case, the sectors are divided by each state--our lowest unit of interest in this case.
 
 ```{r, fig.height = 20, fig.width = 20}
 # determines how 'tall' the tracks should be
@@ -217,7 +218,7 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$uninsured, bg.col = color_f
 
 Although this contains all of the information we may be interested in, it can be a little overwhelming to interpret. Adding in regional groupings can help orient readers. 
 
-Using `highlight.sector` and the strings of states per region, we can group our graph. It should be noted, however, that you should arrange your states by region. 
+Using `highlight.sector` and the strings of states per region we created before we began, we can group our graph. Again, it should be noted that the states must already be arranged by region. 
 
 ```{r fig.height = 20, fig.width = 20, eval = F}
 highlight.sector(col = NULL, sector.index = en_central, border = "black", lwd = 3.5, text = "East North Central", niceFacing = T, facing = "bending.inside", text.vjust = "2.5inches", cex = 2)
@@ -256,7 +257,7 @@ highlight.sector(col = NULL, sector.index = en_central, border = "black", lwd = 
 
 Within `highlight.sector` there are a few useful arguments. `border` specifies the border color. `lwd` specifies the thickness of the border, `text` is the label name for the section. `niceFacing` rotates the bottom text to face outward, making it easier to read. `text.vjust` allows you to change the vertical justification of the text. And `cex` is the text size. 
 
-We must continue the process for each region to cover the entire graph. 
+We must continue the process above for each region to cover the entire graph. 
 
 ```{r fig.height = 20, fig.width = 20, eval = F}
 
@@ -328,7 +329,8 @@ While it may look like the graph is complete, we must add a legend!
 
 The best way to do this is to display each ring as a row in the legend. Because of the `legend` arguments, it is best to specify each element as a matrix, arranged by row.
 
-For border, we specify the first element's border as `NA`, because we want to use it as the name of the variable. This is also the case for the `fill`. We repeat this each time for the number of rings. Finally, since we have the name of the variable and three colors for min, max, and median, we want four columns. For the labels, we specify the variable name, as well as labels for each color. 
+For `border`, we specify the first element's border as `NA`, because we want to use it as the name of the variable displayed in the track or ring. This is also the case for the `fill`. We repeat this each time for the number of tracks Finally, since we have the name of the variable and three colors for min, max, and median, we want four columns. For the labels, we specify the variable name, as well as labels for each color.
+
 ```{r eval = F}
 borders <- matrix(rep(c(NA, "black", "black", "black"), 5), ncol = 4, byrow = T)
 
@@ -344,6 +346,9 @@ labels <- matrix(c("Outter Ring:", "Min Population", "Median Population", "Max P
 legend("bottom", legend = labels, fill = colors, border = borders, cex = 1.4, ncol = 4)
 ```
 ### Our Graph: State Population Characteristics
+
+When you run all of this code back-to-back, you get our final graph. 
+
 ```{r echo = F, fig.height = 20, fig.width = 20}
 # determines how 'tall' the tracks should be
 circos.par("track.height" = 0.075, canvas.xlim = c(-1, 1), canvas.ylim = c(-1.3, 1.1)) 
@@ -431,13 +436,13 @@ circos.track(pub_dat$state_abbreviation, y = pub_dat$opioid_admissions, bg.col =
 ```
 ![8](Figures/8.png)
 
-Here, we see that our second track did not plot Upon looking at the data, we see we have missing values. 
+Here, we see that our second track did not plot. Upon looking at the data, we see we have missing values. 
 
 ```{r}
 summary(pub_dat$opioid_admissions)
 ```
 
-To deal with this, we must replace the missing values both in our color and our data with something else. For the string of colors using `color_fun`, we replace the missing values with white (e.g."#FFFFFFFF"). Then, we substitute a value that is not in our data for the missing values in our data. In this case, I use 0. It is important to use `color_fun` beforehand, so that the function does not account for the added value in its color scale calculation. 
+To deal with this, we must replace the missing values both in our color scale and our data. For the string of colors created using `color_fun`, we replace the missing values with white (e.g."#FFFFFFFF"). For our data, we substitute a value that is not in our data for the NA value. In this case, I use 0, because none of the states report 0 opioid admissions. It is important to use `color_fun` beforehand this modification, so that the function does not account for the added value in its color scale calculation. 
 
 Finally, we can plot the track with the appropriate scale, leaving out the missing states in white. 
 
@@ -482,7 +487,7 @@ circos.track(pub_dat$state_abbreviation, y = admission, bg.col = admission_color
 ```
 ![9](Figures/9.png)
 
-However, we may want to give our viewers an understanding of what the white cells mean. In this case, we can write 'NA' for our missing values. In this example we are missing data for Maryland, Georgia, and Oregon. In `circos.text`, the first two arguments are the x and y locations of the plot. `adj` is the radial adjustment of the text. In this case, I wanted the text to be centered in the middle of the cell. I want the text to say 'NA', and the color to be `red4`. `track.index` specifies which track we want to add the text in. Since this is the second ring, we specify `track.index = 2`. `sector.index` is the slice we want. In this case, it is the state abbreviation: MD, GA, and OR.
+However, we may want to give our viewers an understanding of what the white cells mean. In this case, we can write 'NA' for our missing values. In this example, we are missing data for Maryland, Georgia, and Oregon. In `circos.text`, the first two arguments are the x and y locations of the plot. `adj` is the radial adjustment of the text. In this case, we want the text to be centered in the middle of the cell (e.g. `adj = c(0.5, 0)`, we want the text to state 'NA', and the color to be `red4`. `track.index` specifies which track we want to add the text in. Since this is the second ring, we specify `track.index = 2`. `sector.index` is the sector or slice we want. In this case, we have three sectors: MD, GA, and OR.
 
 ```{r eval = F}
 circos.text(0, 0, adj = c(0.5, 0), "NA", col = "red4", sector.index = "MD", track.index = 2, cex = 1.8, niceFacing = T)
