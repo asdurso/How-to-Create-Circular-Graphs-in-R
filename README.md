@@ -1,7 +1,6 @@
 # How-to-Create-Circular-Graphs-in-R
 
-This tutorial condenses the `circlize` manual for creating circular graphs in R. It provides an easy guide for displaying data in a circular format using `circlize`.The data used are publicly available data on health markers from []. This tutorial supplements ["Circular Visualization in R" by Zuguang Gu](https://jokergoo.github.io/circlize_book/book/index.html). 
-
+This document provides an easy guide for how to display data in a circular format using `circlize`.The data used are publicly available data on state characteristics and opioid use and misuse. The data were compiled by [Gallos et al. (2021)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0245920). This tutorial supplements ["Circular Visualization in R" by Zuguang Gu](https://jokergoo.github.io/circlize_book/book/index.html). 
 # Tutorial 
 
 ## Terminology 
